@@ -116,18 +116,18 @@ Class EasyAsp_Http
 	Public Function GetData(ByVal uri, ByVal m, ByVal async, ByVal data, ByVal u, ByVal p)
 		Dim o,chru
 		'建立XMLHttp对象
-		If Easp.isInstall("MSXML2.serverXMLHTTP") Then
-			Set o = Server.CreateObject("MSXML2.serverXMLHTTP")
-		ElseIf Easp.isInstall("MSXML2.XMLHTTP") Then
+'		If Easp.isInstall("MSXML2.serverXMLHTTP") Then
+'			Set o = Server.CreateObject("MSXML2.serverXMLHTTP")
+'		ElseIf Easp.isInstall("MSXML2.XMLHTTP") Then
 			Set o = Server.CreateObject("MSXML2.XMLHTTP")
-		ElseIf Easp.isInstall("Microsoft.XMLHTTP") Then
-			Set o = Server.CreateObject("Microsoft.XMLHTTP")
-		Else
-			Easp.Error.Raise 47
-			Exit Function
-		End If
+'		ElseIf Easp.isInstall("Microsoft.XMLHTTP") Then
+'			Set o = Server.CreateObject("Microsoft.XMLHTTP")
+'		Else
+'			Easp.Error.Raise 47
+'			Exit Function
+'		End If
 		'设置超时时间
-		o.SetTimeOuts ResolveTimeout, ConnectTimeout, SendTimeout, ReceiveTimeout
+		'o.SetTimeOuts ResolveTimeout, ConnectTimeout, SendTimeout, ReceiveTimeout
 		'抓取地址
 		If Easp.IsN(uri) Then Easp.Error.Raise 48 : Exit Function
 		'通过URL临时指定编码
@@ -170,8 +170,8 @@ Class EasyAsp_Http
 		ElseIf o.Status = 200 Then
 			Headers = o.getAllResponseHeaders()
 			Body = o.responseBody
-			Text = o.responseText
 			If Easp.IsN(CharSet) Then
+			  Text = o.responseText
 				'从Header中提取编码信息
 				If Easp.Test(Headers,"charset=([\w-]+)") Then
 					CharSet = Easp.RegReplace(Headers,"([\s\S]+)charset=([\w-]+)([\s\S]+)","$2")
@@ -281,7 +281,7 @@ Class EasyAsp_Http
 					img = Mid(a(i),InstrRev(a(i),"/")+1)
 				End If
 				Set ht = Easp.Http.New
-				ht.Get TransPath(s_url, a(i))
+				ht.Get "UTF-8>" & TransPath(s_url, a(i))
 				tmp = Easp.Fso.SaveAs(p & img, ht.Body)
 				Set ht = Nothing
 				If tmp Then
